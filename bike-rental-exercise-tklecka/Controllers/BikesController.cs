@@ -23,10 +23,13 @@ namespace bike_rental_exercise_tklecka.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bike>>> GetBikes()
         {
-            return await _context.Bikes.ToListAsync();
+            return await _context.Bikes.OrderBy(b => b.PriceHour)
+                .ThenBy(b => b.PriceAddHour)
+                .ThenByDescending(b => b.PurchaseDate).ToListAsync();
         }
 
         // GET: api/Bikes/5
+        /*
         [HttpGet("{id}")]
         public async Task<ActionResult<Bike>> GetBike(int id)
         {
@@ -38,7 +41,7 @@ namespace bike_rental_exercise_tklecka.Controllers
             }
 
             return bike;
-        }
+        }*/
 
         // PUT: api/Bikes/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for

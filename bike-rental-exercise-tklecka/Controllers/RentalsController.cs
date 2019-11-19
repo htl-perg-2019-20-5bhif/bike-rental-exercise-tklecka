@@ -23,7 +23,7 @@ namespace bike_rental_exercise_tklecka.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Rental>>> GetRentals()
         {
-            return await _context.Rentals.ToListAsync();
+            return await _context.Rentals.Include(r => r.Bike).Include(r => r.Customer).ToListAsync();
         }
 
         // GET: api/Rentals/5

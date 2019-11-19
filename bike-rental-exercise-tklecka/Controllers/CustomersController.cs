@@ -1,12 +1,10 @@
-﻿using System;
+﻿using bike_rental_exercise_tklecka.Data;
+using bike_rental_exercise_tklecka.Model;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using bike_rental_exercise_tklecka.Data;
-using bike_rental_exercise_tklecka.Model;
 
 namespace bike_rental_exercise_tklecka.Controllers
 {
@@ -20,12 +18,18 @@ namespace bike_rental_exercise_tklecka.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Customers
+        //http://localhost:5000/api/Customers?lastname=mu
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersLastname([FromQuery] string lastname)
         {
-            return await _context.Customers.ToListAsync();
+            return await _context.Customers.Where(c => c.LastName.ToLower().Contains(lastname.ToLower())).ToListAsync();
+        }
+        //http://localhost:5000/api/Customers/rentals/1
+        [HttpGet("{id}")]
+        [Route("rentals/{id}", Name = "GetCustomerRentals")]
+        public async Task<ActionResult<IEnumerable<Rental>>> GetCustomerRentals(int id)
+        {
+            return await _context.Rentals.Where(r => r.CustomerID == id).Include(r => r.Bike).ToListAsync();
         }
 
         // GET: api/Customers/5
