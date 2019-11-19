@@ -15,7 +15,7 @@ namespace bike_rental_exercise_tklecka.Model
         [Required]
         public DateTime RentalBegin { get; set; }
         public DateTime RentalEnd { get; set; }
-        [RegularExpression(@"(\d+\.\d{1,2})")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [Range(0.00, double.MaxValue)]
         public double TotalCost { get; set; }
         [Required]

@@ -17,11 +17,11 @@ namespace bike_rental_exercise_tklecka.Model
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime DateService { get; set; }
         [Required]
-        [RegularExpression(@"(\d+\.\d{1,2})")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [Range(0.00, double.MaxValue)]
         public double PriceHour { get; set; }
         [Required]
-        [RegularExpression(@"(\d+\.\d{1,2})")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [Range(1.00, double.MaxValue)]
         public double PriceAddHour { get; set; }
 
