@@ -2,6 +2,7 @@
 using bike_rental_exercise_tklecka.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,6 +41,68 @@ namespace bike_rental_exercise_tklecka.Controllers
             return rental;
         }
 
+        [Route("unpaid", Name = "UnpaidRental")]
+        public async Task<ActionResult<IEnumerable<Rental>>> UnpaidRental()
+        {
+            var rental = await _context.Rentals.Where(r => !r.PaidFlag)
+                .Where(r => r.TotalCost > 0)
+                .Include(r => r.Customer)
+                .ToListAsync();
+
+            if (rental == null)
+            {
+                return NotFound();
+            }
+
+            return rental;
+        }
+
+        [HttpGet("{id}")]
+        [Route("markpaid/{id}", Name = "MarkPaidRental")]
+        public async Task<ActionResult<Rental>> MarkPaidRental(int id)
+        {
+            var rental = await _context.Rentals.FindAsync(id);
+
+            if (rental == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                rental.PaidFlag = true;
+                _context.Update(rental);
+                await _context.SaveChangesAsync();
+            }
+
+            return rental;
+        }
+
+        [HttpGet("{id}")]
+        [Route("endrental/{id}", Name = "EndRental")]
+        public async Task<ActionResult<Rental>> EndRental(int id)
+        {
+            var rental = await _context.Rentals.Where(r => r.ID == id).Include(r => r.Bike).FirstAsync();
+
+            if (rental == null)
+            {
+                return NotFound();
+            }
+            else if (rental.PaidFlag || !rental.RentalEnd.ToString().Equals("01/01/0001 00:00:00"))
+            {
+                return BadRequest();
+            }
+            else
+            {
+                CostCalculation cc = new CostCalculation();
+                rental.RentalEnd = DateTime.Now;
+                rental.TotalCost = cc.CalculateTotalCosts(rental);
+                _context.Update(rental);
+                await _context.SaveChangesAsync();
+            }
+
+            return rental;
+        }
+
         // PUT: api/Rentals/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -72,7 +135,7 @@ namespace bike_rental_exercise_tklecka.Controllers
             return NoContent();
         }
 
-        // POST: api/Rentals
+        // POST: api/Rentals/startrental
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -82,6 +145,23 @@ namespace bike_rental_exercise_tklecka.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRental", new { id = rental.ID }, rental);
+        }
+
+        [HttpPost]
+        [Route("startrental", Name = "StartRental")]
+        public async Task<ActionResult<Rental>> StartRental(Rental rental)
+        {
+            if (!rental.PaidFlag && rental.RentalEnd.ToString().Equals("01/01/0001 00:00:00") && rental.TotalCost == 0)
+            {
+                _context.Rentals.Add(rental);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetRental", new { id = rental.ID }, rental);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Rentals/5
