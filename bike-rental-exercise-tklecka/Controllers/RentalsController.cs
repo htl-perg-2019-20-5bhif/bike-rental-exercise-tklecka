@@ -41,6 +41,7 @@ namespace bike_rental_exercise_tklecka.Controllers
             return rental;
         }
 
+        [HttpGet]
         [Route("unpaid", Name = "UnpaidRental")]
         public async Task<ActionResult<IEnumerable<Rental>>> UnpaidRental()
         {
@@ -57,7 +58,7 @@ namespace bike_rental_exercise_tklecka.Controllers
             return rental;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         [Route("markpaid/{id}", Name = "MarkPaidRental")]
         public async Task<ActionResult<Rental>> MarkPaidRental(int id)
         {
@@ -77,7 +78,7 @@ namespace bike_rental_exercise_tklecka.Controllers
             return rental;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         [Route("endrental/{id}", Name = "EndRental")]
         public async Task<ActionResult<Rental>> EndRental(int id)
         {

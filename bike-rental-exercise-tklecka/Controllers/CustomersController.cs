@@ -18,22 +18,26 @@ namespace bike_rental_exercise_tklecka.Controllers
         {
             _context = context;
         }
-        //http://localhost:5000/api/Customers?lastname=mu
+
+        //api/Customers/lastname?lastname=mu
         [HttpGet]
+        [Route("lastname", Name = "GetCustomersLastname")]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersLastname([FromQuery] string lastname)
         {
             return await _context.Customers.Where(c => c.LastName.ToLower().Contains(lastname.ToLower())).ToListAsync();
         }
-        //http://localhost:5000/api/Customers/rentals/1
-        [HttpGet("{id}")]
+
+        //api/Customers/rentals/1
+        [HttpGet]
         [Route("rentals/{id}", Name = "GetCustomerRentals")]
         public async Task<ActionResult<IEnumerable<Rental>>> GetCustomerRentals(int id)
         {
             return await _context.Rentals.Where(r => r.CustomerID == id).Include(r => r.Bike).ToListAsync();
         }
 
-        // GET: api/Customers/5
-        [HttpGet("{id}")]
+        // GET: api/Customers/getbyid/5
+        /*[HttpGet("getbyid/{id}")]
+        [Route("getbyid/{id}", Name = "GetCustomer")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
@@ -45,7 +49,7 @@ namespace bike_rental_exercise_tklecka.Controllers
 
             return customer;
         }
-
+        */
         // PUT: api/Customers/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
