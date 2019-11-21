@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bike_rental_exercise_tklecka.Data;
 
 namespace bike_rental_exercise_tklecka.Migrations
 {
     [DbContext(typeof(BikeDataContext))]
-    partial class BikeDataContextModelSnapshot : ModelSnapshot
+    [Migration("20191121075127_fix-08")]
+    partial class fix08
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

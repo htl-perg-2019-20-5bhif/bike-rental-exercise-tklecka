@@ -25,6 +25,7 @@ namespace bike_rental_exercise_tklecka
             services.AddControllers();
             services.AddDbContext<BikeDataContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            //options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bike Rental API", Version = "v1" });
